@@ -1,11 +1,42 @@
 <?php
 
-interface Page {
-    public function render(Renderer $renderer);
+interface Renderer {
+    public function renderPage($title, $content);
+    public function renderProduct(Product $product);
 }
 
-interface Renderer {
-    public function renderPage(Page $page);
+class HTMLRenderer implements Renderer {
+    public function renderPage($title, $content) {
+        // Відобразити сторінку у форматі HTML
+    }
+
+    public function renderProduct(Product $product) {
+        // Відобразити продукт у форматі HTML
+    }
+}
+
+class JSONRenderer implements Renderer {
+    public function renderPage($title, $content) {
+        // Відобразити сторінку у форматі JSON
+    }
+
+    public function renderProduct(Product $product) {
+        // Відобразити продукт у форматі JSON
+    }
+}
+
+class XMLRenderer implements Renderer {
+    public function renderPage($title, $content) {
+        // Відобразити сторінку у форматі XML
+    }
+
+    public function renderProduct(Product $product) {
+        // Відобразити продукт у форматі XML
+    }
+}
+
+interface Page {
+    public function render(Renderer $renderer);
 }
 
 class SimplePage implements Page {
@@ -18,7 +49,7 @@ class SimplePage implements Page {
     }
 
     public function render(Renderer $renderer) {
-        return $renderer->renderPage($this);
+        return $renderer->renderPage($this->title, $this->content);
     }
 }
 
@@ -30,65 +61,24 @@ class ProductPage implements Page {
     }
 
     public function render(Renderer $renderer) {
-        return $renderer->renderPage($this);
+        return $renderer->renderProduct($this->product);
     }
 }
 
-class HTMLRenderer implements Renderer {
-    public function renderPage(Page $page) {
-        // Рендеринг сторінки у форматі HTML
-    }
-}
-
-class JsonRenderer implements Renderer {
-    public function renderPage(Page $page) {
-        // Рендеринг сторінки у форматі JSON
-    }
-}
-
-class XmlRenderer implements Renderer {
-    public function renderPage(Page $page) {
-        // Рендеринг сторінки у форматі XML
-    }
-}
-
-class Product {
-    private $id;
-    private $name;
-    private $description;
-    private $image;
-
-    public function __construct($id, $name, $description, $image) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->description = $description;
-        $this->image = $image;
-    }
-
-    // Геттери та інші методи
-}
-
-// Створення сторінки товару
-$product = new Product(1, "Назва товару", "Опис товару", "image.jpg");
+$simplePage = new SimplePage("Simple Page", "This is a simple page");
+$product = new Product("Product Name", "Product Description", "product.jpg");
 $productPage = new ProductPage($product);
 
-// Вибір рендерера
 $htmlRenderer = new HTMLRenderer();
-$jsonRenderer = new JsonRenderer();
-$xmlRenderer = new XmlRenderer();
+$jsonRenderer = new JSONRenderer();
+$xmlRenderer = new XMLRenderer();
 
-// Рендерінг сторінок у різних форматах
-$htmlResult = $productPage->render($htmlRenderer);
-$jsonResult = $productPage->render($jsonRenderer);
-$xmlResult = $productPage->render($xmlRenderer);
+$htmlSimplePage = $simplePage->render($htmlRenderer);
+$jsonSimplePage = $simplePage->render($jsonRenderer);
+$xmlSimplePage = $simplePage->render($xmlRenderer);
 
-echo "HTML рендерінг:\n";
-echo $htmlResult;
-
-echo "\nJSON рендерінг:\n";
-echo $jsonResult;
-
-echo "\nXML рендерінг:\n";
-echo $xmlResult;
+$htmlProductPage = $productPage->render($htmlRenderer);
+$jsonProductPage = $productPage->render($jsonRenderer);
+$xmlProductPage = $productPage->render($xmlRenderer);
 
 ?>
